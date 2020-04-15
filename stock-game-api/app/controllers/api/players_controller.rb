@@ -1,7 +1,7 @@
 class Api::PlayersController < ApplicationController
   def index 
-    players = Player.all 
-
+    players = Player.all
+     
     render json: players
   end
 

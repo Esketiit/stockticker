@@ -18,11 +18,11 @@ game = {
 }
 
 
-Game.create(game)
+new_game = Game.create(game)
 
 players = [
   { 
-    "id": 1,
+    "game_id": new_game.id,
     "name": "player1", 
     "money": 5000,
     "round": 8,
@@ -34,7 +34,7 @@ players = [
    },
 
 { 
-  "id": 2,
+  "game_id": new_game.id,
   "round": 8,
   "name": "player2", 
   "money": 5000,
@@ -46,5 +46,5 @@ players = [
   }
 ]
 
-players.each {|player| Player.create(player)}
+players.each {|player| Player.create!(player)}
    
