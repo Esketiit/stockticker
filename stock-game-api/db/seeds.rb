@@ -14,7 +14,8 @@ game = {
   "toilet_paper": 150,
   "hand_soap": 100,
   "frozen_pizza": 75,
-  "animal_crossing": 50
+  "animal_crossing": 50,
+  "round": 8
 }
 
 

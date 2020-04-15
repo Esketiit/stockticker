@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_15_133941) do
+ActiveRecord::Schema.define(version: 2020_04_15_153522) do
 
   create_table "games", force: :cascade do |t|
     t.integer "toilet_paper"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2020_04_15_133941) do
     t.integer "animal_crossing"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "round"
   end
 
   create_table "players", force: :cascade do |t|

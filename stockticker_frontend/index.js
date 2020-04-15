@@ -5,8 +5,31 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let toilet = document.getElementById("toilet_paper")
     let soap = document.getElementById("hand_soap")
     let pizza = document.getElementById("frozen_pizza")
+    let round = document.getElementById("round_counter")
+    let turnButton = document.getElementById("end_turn")
+    let player1_id = 1
+    let player2_id = 2
 
     fetchGame()
+    let roundValue = parseInt(round.innerText)
+    die.addEventListener("click", (event) => {
+        interpretDice()
+    })
+
+    turnButton.addEventListener("click", (event) => {
+        console.log(round.innerText)
+        if (isEven(roundValue)) {
+            console.log("Hello")
+        }
+    })
+
+    function isEven(num) {
+        if (num % 2 === 0 && num > 0) {
+            return true
+        } else {
+            return false
+        }
+    }
 
     function fetchGame() {
         fetch("http://localhost:3000/api/games")
@@ -15,20 +38,23 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
 
     //uses fetchGame to add game data to DOM
-    function renderGame(game) {
-        console.log(game)
+    function renderGame(gameArr) {
+        console.log(gameArr)
         buildGrid()
-        //have to change this to find a game from an array of games, eventually
-        grid.dataset.id = game[0].id
-        pizza.dataset.value = game[0].frozen_pizza
-        soap.dataset.value = game[0].hand_soap
-        toilet.dataset.value = game[0].toilet_paper
-        ani_c.dataset.value = game[0].animal_crossing
+        //have to change this to find a gameArr from an array of games, eventually
+        grid.dataset.id = gameArr[0].id
+        pizza.dataset.value = gameArr[0].frozen_pizza
+        soap.dataset.value = gameArr[0].hand_soap
+        toilet.dataset.value = gameArr[0].toilet_paper
+        ani_c.dataset.value = gameArr[0].animal_crossing
+        round.dataset.value = gameArr[0].round
 
-        pizza.innerText = `Frozen Pizza Value: ${game[0].frozen_pizza}`
-        soap.innerText = `Hand Soap Value: ${game[0].hand_soap}`
-        toilet.innerText = `Toilet Paper Value: ${game[0].toilet_paper}`
-        ani_c.innerText = `Animal Crossing value: ${game[0].animal_crossing}`
+        pizza.innerText = `Frozen Pizza Value: ${gameArr[0].frozen_pizza}`
+        soap.innerText = `Hand Soap Value: ${gameArr[0].hand_soap}`
+        toilet.innerText = `Toilet Paper Value: ${gameArr[0].toilet_paper}`
+        ani_c.innerText = `Animal Crossing Value: ${gameArr[0].animal_crossing}`
+        round.innerText = `Round: ${gameArr[0].round}`
+
     }
 
     function buildGrid() {
@@ -42,9 +68,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
         }
     }
 
-    die.addEventListener("click", (event) => {
-        interpretDice()
-    })
 
     //rolls dice and interprets the results
     function interpretDice() {
@@ -103,10 +126,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
         stock.dataset.value = newValue
         stock.innerText = `${comodity} value: ${newValue}`
 
-        fetch(`http://localhost:3000/api/games/${game_id}`, {
-            method: "POST",
+        console.log(comodity)
+        fetch(`http://localhost:3000/api/games/${parseInt(game_id)}`, {
+            method: "PATCH",
             headers: config,
-            body: JSON.stringify({ comodity: newValue })
+            body: JSON.stringify({ "game": { [comodity]: newValue } })
         })
             .then(resp => resp.json())
             .then(data => console.log(data))
