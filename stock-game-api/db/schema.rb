@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_14_155618) do
+ActiveRecord::Schema.define(version: 2020_04_15_133941) do
 
   create_table "games", force: :cascade do |t|
     t.integer "toilet_paper"
@@ -25,8 +25,11 @@ ActiveRecord::Schema.define(version: 2020_04_14_155618) do
     t.integer "game_id"
     t.string "name"
     t.integer "money"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.integer "round"
+    t.integer "toilet_paper"
+    t.integer "hand_soap"
+    t.integer "frozen_pizza"
+    t.integer "animal_crossing"
   end
 
 end

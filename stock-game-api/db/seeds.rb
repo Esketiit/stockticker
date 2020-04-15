@@ -20,4 +20,31 @@ game = {
 
 Game.create(game)
 
-Player.create({ "id": 1, "name": "player1", "money": 5000 }) 
+players = [
+  { 
+    "id": 1,
+    "name": "player1", 
+    "money": 5000,
+    "round": 8,
+    "toilet_paper": 0,
+    "hand_soap": 0,
+    "frozen_pizza": 0,
+    "animal_crossing": 0
+
+   },
+
+{ 
+  "id": 2,
+  "round": 8,
+  "name": "player2", 
+  "money": 5000,
+  "toilet_paper": 0,
+  "hand_soap": 0,
+  "frozen_pizza": 0,
+  "animal_crossing": 0
+  
+  }
+]
+
+players.each {|player| Player.create(player)}
+   
