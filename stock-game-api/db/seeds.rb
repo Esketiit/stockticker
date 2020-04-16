@@ -24,7 +24,7 @@ new_game = Game.create(game)
 players = [
   { 
     "game_id": new_game.id,
-    "name": "player1", 
+    "name": "Joseph(Player1)", 
     "money": 5000,
     "round": 8,
     "toilet_paper": 0,
@@ -37,7 +37,7 @@ players = [
 { 
   "game_id": new_game.id,
   "round": 8,
-  "name": "player2", 
+  "name": "Brian(Player2)", 
   "money": 5000,
   "toilet_paper": 0,
   "hand_soap": 0,
