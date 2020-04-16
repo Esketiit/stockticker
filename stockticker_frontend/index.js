@@ -7,29 +7,53 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let round = document.getElementById("round_counter")
     let turnButton = document.getElementById("end_turn")
     let playerList = document.getElementById("players")
-    let turns = []
 
     fetchGame()
 
     die.addEventListener("click", (event) => {
         interpretDice()
+        if (round.dataset.value > 1) {
+            round.dataset.value--
+            round.innerText = `Round Left: ${round.dataset.value}`
+        } else {
+            round.dataset.value--
+            round.innerText = `Round Left: ${round.dataset.value}`
+            console.log("end the game")
+        }
     })
 
     playerList.addEventListener("click", (event) => {
-        if (event.target.innerText === "End Turn") {
-            let currentPlayer = event.target.parentNode
-            turns.push(currentPlayer.dataset.id)
-            console.log(currentPlayer.children)
+        if (event.target.className === "buy") {
+            buyStock(event.target, event.target.parentNode)
         }
+        // else if (event.target.className === "sell") {
+        //     console.log(event.target.id)
+        // }
     })
 
-
-    function isEven(num) {
-        if (num % 2 === 0 && num > 0) {
-            return true
-        } else {
-            return false
+    function buyStock(commodityDiv, playerDiv) {
+        let currentAmount = commodityDiv.previousSibling.dataset.amount
+        let currentCash = playerDiv.childeren
+        let config = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         }
+        console.log(cash)
+        console.log(commodityDiv)
+        console.log(playerDiv)
+
+        // fetch(`http://localhost:3000/api/players/${playerDiv.dataset.id}`, {
+        //     method: "POST",
+        //     headers: config,
+        //     body: JSON.stringify({ [commodity]: card.dataset.id })
+        // })
+        //     .then(resp => resp.json())
+        //     .then(data => console.log(data))
+
+    }
+
+    function sellStock(commodity, playerDiv) {
+
     }
 
     function fetchGame() {
@@ -67,59 +91,64 @@ document.addEventListener("DOMContentLoaded", (event) => {
         //h4 that shows player name
         let playerName = document.createElement('h4')
         playerName.innerText = `${player.name}`
-
-        //button that end the players turn
-        let turnButton = document.createElement('button')
-        turnButton.setAttribute("id", "end_turn")
-        turnButton.innerText = "End Turn"
+        playerDiv.append(playerName)
 
         //shows players cash
         let cash = document.createElement('p')
         cash.setAttribute("id", "cash")
         cash.dataset.amount = player.money
         cash.innerText = `Money: ${player.money}`
+        playerDiv.append(cash)
 
         //div and button that handles the players pizza stock
         let pizzaStock = document.createElement('div')
         pizzaStock.setAttribute("id", "pizza_stock")
         pizzaStock.dataset.amount = player.frozen_pizza
         pizzaStock.innerText = `Frozen Pizza Stocks: ${player.frozen_pizza} `
-        let pizzaButton = document.createElement("button")
-        pizzaButton.setAttribute("id", "buy_pizza")
-        pizzaButton.innerText = "Buy 10 Frozen Pizza"
-        pizzaStock.append(pizzaButton)
+        playerDiv.append(pizzaStock)
+        let pizzaBuy = document.createElement("button")
+        pizzaBuy.setAttribute("id", "buy_pizza")
+        pizzaBuy.innerText = "Buy 10 Frozen Pizza"
+        pizzaBuy.setAttribute("class", "buy")
+        playerDiv.append(pizzaBuy)
 
         //div and button that handle the players toilet paper stock
         let toiletStock = document.createElement('div')
         toiletStock.setAttribute("id", "toilet_stock")
         toiletStock.dataset.amount = player.toilet_paper
         toiletStock.innerText = `Toilet Paper Stocks: ${player.toilet_paper} `
-        let toiletButton = document.createElement("button")
-        toiletButton.setAttribute("id", "buy_toilet")
-        toiletButton.innerText = "Buy 10 Toilet Paper"
-        toiletStock.append(toiletButton)
+        playerDiv.append(toiletStock)
+        let toiletBuy = document.createElement("button")
+        toiletBuy.setAttribute("id", "buy_toilet")
+        toiletBuy.innerText = "Buy 10 Toilet Paper"
+        toiletBuy.setAttribute("class", "buy")
+        playerDiv.append(toiletBuy)
 
         //div and button handles the players animal crossing stock
         let animalStock = document.createElement('div')
         animalStock.setAttribute("id", "animal_stock")
         animalStock.dataset.amount = player.animal_crossing
         animalStock.innerText = `Animal Crossing Stocks: ${player.animal_crossing} `
-        let animalButton = document.createElement("button")
-        animalButton.setAttribute("id", "buy_animal")
-        animalButton.innerText = "Buy 10 Animal Crossing"
-        animalStock.append(animalButton)
+        playerDiv.append(animalStock)
+        let animalBuy = document.createElement("button")
+        animalBuy.setAttribute("id", "buy_animal")
+        animalBuy.innerText = "Buy 10 Animal Crossing"
+        animalBuy.setAttribute("class", "buy")
+        playerDiv.append(animalBuy)
 
         //Hand Soap
         let soapStock = document.createElement("div")
         soapStock.setAttribute("id", "soap_stock")
         soapStock.dataset.amount = player.hand_soap
         soapStock.innerText = `Hand Soap Stocks: ${player.hand_soap} `
-        let soapButton = document.createElement("button")
-        soapButton.setAttribute("id", "buy_soap")
-        soapButton.innerText = "Buy 10 Hand Soap"
-        soapStock.append(soapButton)
+        playerDiv.append(soapStock)
+        let soapBuy = document.createElement("button")
+        soapBuy.setAttribute("id", "buy_soap")
+        soapBuy.innerText = "Buy 10 Hand Soap"
+        soapBuy.setAttribute("class", "buy")
+        playerDiv.append(soapBuy)
 
-        playerDiv.append(playerName, turnButton, cash, pizzaStock, toiletStock, animalStock, soapStock)
+        // playerDiv.append(playerName, turnButton, cash, pizzaStock, toiletStock, animalStock, soapStock)
         playerList.append(playerDiv)
     }
 
@@ -182,7 +211,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         stock.innerText = `${comodity} value: ${newValue}`
 
         console.log(comodity)
-        fetch(`http://localhost:3000/api/games/${parseInt(game_id)}`, {
+        fetch(`http://localhost:3000/api/games/${parseInt(playerList.dataset.game_id)}`, {
             method: "PATCH",
             headers: config,
             body: JSON.stringify({ "game": { [comodity]: newValue } })
