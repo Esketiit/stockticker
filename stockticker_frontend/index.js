@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", (event) => {
-    let grid = document.querySelector(".grid-container")
     let die = document.querySelector(".die")
     let animal = document.getElementById("animal_crossing")
     let toilet = document.getElementById("toilet_paper")
@@ -8,14 +7,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let round = document.getElementById("round_counter")
     let turnButton = document.getElementById("end_turn")
     let playerList = document.getElementById("players")
-    let players = 0
+    let turns = []
 
     fetchGame()
-    let roundValue = parseInt(round.innerText)
 
     die.addEventListener("click", (event) => {
         interpretDice()
     })
+
+    playerList.addEventListener("click", (event) => {
+        if (event.target.innerText === "End Turn") {
+            let currentPlayer = event.target.parentNode
+            turns.push(currentPlayer.dataset.id)
+            console.log(currentPlayer.children)
+        }
+    })
+
 
     function isEven(num) {
         if (num % 2 === 0 && num > 0) {
@@ -35,11 +42,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
         let game = gameArr[0].game
         gameArr[0].players.forEach(player => {
             createPlayerDiv(player)
-            // console.log(player.id)
         })
-        players = gameArr[0].players.length
 
-        playerList.dataset.id = game.id
+        playerList.dataset.game_id = game.id
         pizza.dataset.value = game.frozen_pizza
         soap.dataset.value = game.hand_soap
         toilet.dataset.value = game.toilet_paper
@@ -58,7 +63,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         //div that holds data and buttons for a given player
         let playerDiv = document.createElement('div')
         playerDiv.dataset.id = player.id
-        playerDiv.setAttribute("disabled", "true")
+        playerDiv.setAttribute("class", "player")
         //h4 that shows player name
         let playerName = document.createElement('h4')
         playerName.innerText = `${player.name}`
@@ -67,6 +72,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
         let turnButton = document.createElement('button')
         turnButton.setAttribute("id", "end_turn")
         turnButton.innerText = "End Turn"
+
+        //shows players cash
+        let cash = document.createElement('p')
+        cash.setAttribute("id", "cash")
+        cash.dataset.amount = player.money
+        cash.innerText = `Money: ${player.money}`
 
         //div and button that handles the players pizza stock
         let pizzaStock = document.createElement('div')
@@ -108,8 +119,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         soapButton.innerText = "Buy 10 Hand Soap"
         soapStock.append(soapButton)
 
-        playerDiv.append(playerName, turnButton, pizzaStock, toiletStock, animalStock, soapStock)
-        playerList.appendChild(playerDiv)
+        playerDiv.append(playerName, turnButton, cash, pizzaStock, toiletStock, animalStock, soapStock)
+        playerList.append(playerDiv)
     }
 
 
