@@ -38,7 +38,9 @@ h1 {
     text-align: center;
 }
 
-#player_list{
+#players{
+    display: grid;
+    grid-template-columns: auto auto;
     margin:0  auto;
 }
 
@@ -53,10 +55,11 @@ h1 {
     margin: 0 auto;
 }
 
+
 #players{
     color:black;
     font-family: 'Poppins', sans-serif;
-}
+
 
 
  /* buttons! */
@@ -81,6 +84,7 @@ h1 {
 #buy_animal:active {
 	position:relative;
 	top:1px;
+
 }
 
 #buy_pizza {
@@ -152,3 +156,4 @@ h1 {
 html {
     background-color: rgb(255, 200, 161);
 }
+
