@@ -1,3 +1,9 @@
+
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", (event) => {
     let die = document.querySelector(".die")
     let animal = document.getElementById("animal_crossing")
@@ -10,8 +16,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     fetchGame()
     console.log(playerList.children)
-
-    die.addEventListener("click", (event) => {
+  
         if (round.dataset.value > 1) {
             round.dataset.value--
             round.innerText = `Round Left: ${round.dataset.value}`
@@ -92,6 +97,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
 
     function updatePlayer(commodity, transaction, player_id, currentAmount) {
+
         let config = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -140,6 +146,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         toilet.innerText = `Toilet Paper Value: ${game.toilet_paper}`
         animal.innerText = `Animal Crossing Value: ${game.animal_crossing}`
         round.innerText = `Rounds Left: ${game.round}`
+        
+        getChart(game)
     }
 
     function createPlayerDiv(player) {
@@ -276,8 +284,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             body: JSON.stringify({ "game": { [comodity]: newValue } })
         })
             .then(resp => resp.json())
-            .then(data => console.log(data))
-
+            .then(game => getChart(game))
     }
 
     //helper function that returns an object
@@ -295,3 +302,36 @@ document.addEventListener("DOMContentLoaded", (event) => {
         return Math.floor(Math.random() * num) + 1
     }
 })
+
+
+
+
+
+
+
+
+
+
+
+function getChart(game) {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'line',
+    
+      // The data for our dataset
+      data: {
+          labels: ['Toilet Paper', 'Hand Soap', 'Frozen Pizza', 'Animal Crossing'],
+          datasets: [{
+              label: 'Quarentine Commodities',
+              backgroundColor: 'rgb(255, 99, 132)',
+              borderColor: 'rgb(255, 99, 132)',
+              data: [`${game.toilet_paper}`, `${game.hand_soap}`, `${game.frozen_pizza}`, `${game.animal_crossing}`]
+          }]
+      },
+    
+      // Configuration options go here
+      options: {}
+    })
+
+}
