@@ -25,7 +25,7 @@ players = [
   { 
     "game_id": new_game.id,
     "name": "Joseph(Player1)", 
-    "money": 5000,
+    "money": 4300,
     "round": 8,
     "toilet_paper": 0,
     "hand_soap": 0,

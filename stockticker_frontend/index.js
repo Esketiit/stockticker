@@ -9,16 +9,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let playerList = document.getElementById("players")
 
     fetchGame()
+    console.log(playerList.children)
 
     die.addEventListener("click", (event) => {
-        interpretDice()
         if (round.dataset.value > 1) {
             round.dataset.value--
             round.innerText = `Round Left: ${round.dataset.value}`
+            interpretDice()
         } else {
             round.dataset.value--
             round.innerText = `Round Left: ${round.dataset.value}`
-            console.log("end the game")
+            endGame()
         }
     })
 
@@ -31,25 +32,83 @@ document.addEventListener("DOMContentLoaded", (event) => {
         // }
     })
 
+    function endGame() {
+        console.log("END FUNCTION HERE")
+    }
+
     function buyStock(commodityDiv, playerDiv) {
-        let currentAmount = commodityDiv.previousSibling.dataset.amount
-        let currentCash = playerDiv.childeren
+        let currentAmount = parseInt(commodityDiv.previousSibling.dataset.amount)
+        let currentValue = null
+        let playerCash = playerDiv.childNodes[1]
+        let currentCash = playerCash.dataset.amount
+
+        switch (commodityDiv.id) {
+            case "buy_pizza":
+                let playerPizza = playerDiv.childNodes[2]
+                currentValue = parseInt(pizza.dataset.value)
+                console.log(`http://localhost:3000/api/players/${parseInt(playerDiv.dataset.id)}`)
+                if (0 < currentCash - (currentValue * 10)) {
+                    playerPizza.dataset.amount = parseInt(playerPizza.dataset.amount) + 10
+                    playerPizza.innerText = `Frozen Pizza Stocks: ${playerPizza.dataset.amount}`
+                    playerCash.dataset.amount = (currentCash - (currentValue * 10))
+                    playerCash.innerText = `Money: ${playerCash.dataset.amount}`
+                    updatePlayer("frozen_pizza", (currentCash - (currentValue * 10)), playerDiv.dataset.id, currentAmount)
+                }
+                break
+            case "buy_toilet":
+                let playerToilet = playerDiv.childNodes[4]
+                currentValue = parseInt(toilet.dataset.value)
+                if (0 < currentCash - (currentValue * 10)) {
+                    playerToilet.dataset.amount = parseInt(playerToilet.dataset.amount) + 10
+                    playerToilet.innerText = `Toilet Paper Stocks: ${playerToilet.dataset.amount}`
+                    playerCash.dataset.amount = (currentCash - (currentValue * 10))
+                    playerCash.innerText = `Money: ${playerCash.dataset.amount}`
+                    updatePlayer("toilet_paper", (currentCash - (currentValue * 10)), playerDiv.dataset.id, currentAmount)
+                }
+                break
+            case "buy_animal":
+                let playerAnimal = playerDiv.childNodes[6]
+                currentValue = parseInt(animal.dataset.value)
+                if (0 < currentCash - (currentValue * 10)) {
+                    playerAnimal.dataset.amount = parseInt(playerAnimal.dataset.amount) + 10
+                    playerAnimal.innerText = `Animal Crossing Stocks: ${playerAnimal.dataset.amount}`
+                    playerCash.dataset.amount = (currentCash - (currentValue * 10))
+                    playerCash.innerText = `Money: ${playerCash.dataset.amount}`
+                    updatePlayer("animal_crossing", (currentCash - (currentValue * 10)), playerDiv.dataset.id, currentAmount)
+                }
+                break
+            case "buy_soap":
+                let playerSoap = playerDiv.childNodes[8]
+                currentValue = parseInt(soap.dataset.value)
+                if (0 < currentCash - (currentValue * 10)) {
+                    playerSoap.dataset.amount = parseInt(playerSoap.dataset.amount) + 10
+                    playerSoap.innerText = `Hand Soap Stocks: ${playerSoap.dataset.amount}`
+                    playerCash.dataset.amount = (currentCash - (currentValue * 10))
+                    playerCash.innerText = `Money: ${playerCash.dataset.amount}`
+                    updatePlayer("hand_soap", (currentCash - (currentValue * 10)), playerDiv.dataset.id, currentAmount)
+                }
+                break
+        }
+    }
+
+    function updatePlayer(commodity, transaction, player_id, currentAmount) {
         let config = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
-        console.log(cash)
-        console.log(commodityDiv)
-        console.log(playerDiv)
 
-        // fetch(`http://localhost:3000/api/players/${playerDiv.dataset.id}`, {
-        //     method: "POST",
-        //     headers: config,
-        //     body: JSON.stringify({ [commodity]: card.dataset.id })
-        // })
-        //     .then(resp => resp.json())
-        //     .then(data => console.log(data))
-
+        fetch(`http://localhost:3000/api/players/${player_id}`, {
+            method: "PATCH",
+            headers: config,
+            body: JSON.stringify({
+                "player": {
+                    "money": transaction,
+                    [commodity]: (currentAmount + 10)
+                }
+            })
+        })
+            .then(resp => resp.json())
+            .then(data => console.log(data))
     }
 
     function sellStock(commodity, playerDiv) {
