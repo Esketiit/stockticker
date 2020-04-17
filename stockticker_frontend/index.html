@@ -1,28 +1,36 @@
-<h1>StockTicker</h1>
-
-<head>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<h1>Stock Ticker</h1>
+​  <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="app.css">
-
+​    <script src="index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
     <title>Document</title>
-</head>
-
-<body>
+  </head>
+​
+  <body>
+    <div id="round_counter"></div>
+    <div id="turn_tracker"></div>
     <div id="dice">
-        <button class="die" id="comodity">roll for comodity</button>
-    </div>
-
-
-    <div class="grid-container">
-
+        <button class="die" id="comodity">Next Round: Roll Dice</button>
     </div><br>
-
+​    <canvas id="myChart"></canvas>
+​
     <div id="stock_values">
         <p id="toilet_paper"></p>
         <p id="hand_soap"></p>
         <p id="frozen_pizza"></p>
         <p id="animal_crossing"></p>
     </div>
-</body>
+    <div id="players"></div>
+  </body>
+</html>
+   
+​
 
-<script src="index.js"></script>
+
+
+<!-- <canvas id="myChart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->

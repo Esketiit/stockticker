@@ -1,14 +1,19 @@
 class Api::GamesController < ApplicationController
   def index 
     games = Game.all 
-
-    render json: games
+    gamesArr = games.map {|game| {"game": game, "players": game.players}}
+    render json: gamesArr
   end
 
   def show 
-    game = Game.find(params[:id])
+    game = Game.find(params[:id]) 
+    data = {
+      "game": game,
+      "players": game.players
+    }
+    
 
-    render json: game
+    render json: data
   end
 
   def update 
