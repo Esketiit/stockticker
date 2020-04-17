@@ -328,4 +328,33 @@ document.addEventListener("DOMContentLoaded", (event) => {
     function diceRoll(num) {
         return Math.floor(Math.random() * num) + 1
     }
+
 })
+
+function getChart(game) {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'line',
+    
+      // The data for our dataset
+      data: {
+          labels: ['Toilet Paper', 'Hand Soap', 'Frozen Pizza', 'Animal Crossing'],
+          datasets: [{
+              label: 'Quarentine Commodities',
+              backgroundColor: 'rgb(0, 200, 200)',
+              borderColor: 'rgb(255, 20, 200)',
+              borderWidth: 5,
+              steppedLine: true,
+              pointStyle: 'triangle',
+              
+              data: [`${game.toilet_paper}`, `${game.hand_soap}`, `${game.frozen_pizza}`, `${game.animal_crossing}`]
+          }]
+      },
+    
+      // Configuration options go here
+      options: {}
+    })
+
+}
+
