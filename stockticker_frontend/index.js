@@ -1,9 +1,3 @@
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", (event) => {
     let die = document.querySelector(".die")
     let animal = document.getElementById("animal_crossing")
@@ -12,19 +6,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let pizza = document.getElementById("frozen_pizza")
     let round = document.getElementById("round_counter")
     let turnButton = document.getElementById("end_turn")
+    let tracker = document.querySelector(".tracker")
     let playerList = document.getElementById("players")
-
+    //playerID is defined in renderPlayer and used in endGame
+    let players = []
     fetchGame()
 
     die.addEventListener("click", (event) => {
-        interpretDice()
         if (round.dataset.value > 1) {
             round.dataset.value--
             round.innerText = `Round Left: ${round.dataset.value}`
+            interpretDice()
         } else {
             round.dataset.value--
             round.innerText = `Round Left: ${round.dataset.value}`
-            console.log("end the game")
+            interpretDice()
+            endGame()
         }
     })
 
@@ -37,25 +34,106 @@ document.addEventListener("DOMContentLoaded", (event) => {
         // }
     })
 
+    function endGame() {
+        //disables roll button
+        die.setAttribute("disabled", "true")
+        let h1 = document.createElement('h1')
+        let animalValue = animal.dataset.value
+        let toiletValue = toilet.dataset.value
+        let soapValue = soap.dataset.value
+        let pizzaValue = pizza.dataset.value
+        let player1 = players[0]
+        let player1Value = 0
+        let player2 = players[1]
+        let player2Value = 0
+
+        player1Value = parseInt((player1.money + (player1.toilet_paper * toiletValue) + (player1.animal_crossing * animalValue) + (player1.hand_soap * soapValue) + (player1.frozen_pizza * pizzaValue)))
+        player2Value = parseInt((player2.money + (player2.toilet_paper * toiletValue) + (player2.animal_crossing * animalValue) + (player2.hand_soap * soapValue) + (player2.frozen_pizza * pizzaValue)))
+        console.log(player1Value)
+        console.log(player2Value)
+
+        if (player1Value > player2Value) {
+            h1.innerText = `Player 1 won with ${player1Value} dollars!`
+            tracker.append(h1)
+        } else if (player1Value > player2Value) {
+            h1.innerText = `Player 2 won with ${player2Value} dollars!`
+            tracker.append(h1)
+        }
+    }
+
     function buyStock(commodityDiv, playerDiv) {
-        let currentAmount = commodityDiv.previousSibling.dataset.amount
-        let currentCash = playerDiv.childeren
+        let currentAmount = parseInt(commodityDiv.previousSibling.dataset.amount)
+        let currentValue = null
+        let playerCash = playerDiv.childNodes[1]
+        let currentCash = playerCash.dataset.amount
+        //lol
+        switch (commodityDiv.id) {
+            case "buy_pizza":
+                let playerPizza = playerDiv.childNodes[2]
+                currentValue = parseInt(pizza.dataset.value)
+                console.log(`http://localhost:3000/api/players/${parseInt(playerDiv.dataset.id)}`)
+                if (0 < currentCash - (currentValue * 10)) {
+                    playerPizza.dataset.amount = parseInt(playerPizza.dataset.amount) + 10
+                    playerPizza.innerText = `Frozen Pizza Stocks: ${playerPizza.dataset.amount}`
+                    playerCash.dataset.amount = (currentCash - (currentValue * 10))
+                    playerCash.innerText = `Money: ${playerCash.dataset.amount}`
+                    updatePlayer("frozen_pizza", (currentCash - (currentValue * 10)), playerDiv.dataset.id, currentAmount)
+                }
+                break
+            case "buy_toilet":
+                let playerToilet = playerDiv.childNodes[4]
+                currentValue = parseInt(toilet.dataset.value)
+                if (0 < currentCash - (currentValue * 10)) {
+                    playerToilet.dataset.amount = parseInt(playerToilet.dataset.amount) + 10
+                    playerToilet.innerText = `Toilet Paper Stocks: ${playerToilet.dataset.amount}`
+                    playerCash.dataset.amount = (currentCash - (currentValue * 10))
+                    playerCash.innerText = `Money: ${playerCash.dataset.amount}`
+                    updatePlayer("toilet_paper", (currentCash - (currentValue * 10)), playerDiv.dataset.id, currentAmount)
+                }
+                break
+            case "buy_animal":
+                let playerAnimal = playerDiv.childNodes[6]
+                currentValue = parseInt(animal.dataset.value)
+                if (0 < currentCash - (currentValue * 10)) {
+                    playerAnimal.dataset.amount = parseInt(playerAnimal.dataset.amount) + 10
+                    playerAnimal.innerText = `Animal Crossing Stocks: ${playerAnimal.dataset.amount}`
+                    playerCash.dataset.amount = (currentCash - (currentValue * 10))
+                    playerCash.innerText = `Money: ${playerCash.dataset.amount}`
+                    updatePlayer("animal_crossing", (currentCash - (currentValue * 10)), playerDiv.dataset.id, currentAmount)
+                }
+                break
+            case "buy_soap":
+                let playerSoap = playerDiv.childNodes[8]
+                currentValue = parseInt(soap.dataset.value)
+                if (0 < currentCash - (currentValue * 10)) {
+                    playerSoap.dataset.amount = parseInt(playerSoap.dataset.amount) + 10
+                    playerSoap.innerText = `Hand Soap Stocks: ${playerSoap.dataset.amount}`
+                    playerCash.dataset.amount = (currentCash - (currentValue * 10))
+                    playerCash.innerText = `Money: ${playerCash.dataset.amount}`
+                    updatePlayer("hand_soap", (currentCash - (currentValue * 10)), playerDiv.dataset.id, currentAmount)
+                }
+                break
+        }
+    }
+
+    function updatePlayer(commodity, transaction, player_id, currentAmount) {
         let config = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
-        console.log(cash)
-        console.log(commodityDiv)
-        console.log(playerDiv)
 
-        // fetch(`http://localhost:3000/api/players/${playerDiv.dataset.id}`, {
-        //     method: "POST",
-        //     headers: config,
-        //     body: JSON.stringify({ [commodity]: card.dataset.id })
-        // })
-        //     .then(resp => resp.json())
-        //     .then(data => console.log(data))
-
+        fetch(`http://localhost:3000/api/players/${player_id}`, {
+            method: "PATCH",
+            headers: config,
+            body: JSON.stringify({
+                "player": {
+                    "money": transaction,
+                    [commodity]: (currentAmount + 10)
+                }
+            })
+        })
+            .then(resp => resp.json())
+            .then(data => console.log(data))
     }
 
     function sellStock(commodity, playerDiv) {
@@ -66,6 +144,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         fetch("http://localhost:3000/api/games")
             .then(response => response.json())
             .then(gameArr => renderGame(gameArr))
+
+
     }
 
     function renderGame(gameArr) {
@@ -88,14 +168,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
         animal.innerText = `Animal Crossing Value: ${game.animal_crossing}`
         round.innerText = `Rounds Left: ${game.round}`
 
-        
         getChart(game)
+
     }
 
     function createPlayerDiv(player) {
         //div that holds data and buttons for a given player
         let playerDiv = document.createElement('div')
         playerDiv.dataset.id = player.id
+        players.push(player)
         playerDiv.setAttribute("class", "player")
         //h4 that shows player name
         let playerName = document.createElement('h4')
@@ -158,7 +239,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         playerDiv.append(soapBuy)
 
         // playerDiv.append(playerName, turnButton, cash, pizzaStock, toiletStock, animalStock, soapStock)
-        playerList.append(playerDiv)
+        playerList.appendChild(playerDiv)
     }
 
 
@@ -171,39 +252,40 @@ document.addEventListener("DOMContentLoaded", (event) => {
         switch (results.comodity) {
             case 1:
                 if (results.direction === 1) {
-                    updateStock(1, "toilet_paper", results.number, playerList.dataset.id)
+                    updateStock(1, "toilet_paper", results.number, "Toilet Paper Up: ")
                 } else {
-                    updateStock(-1, "toilet_paper", results.number, playerList.dataset.id)
+                    updateStock(-1, "toilet_paper", results.number, "Toilet Paper Down: ")
                 }
                 break;
             case 2:
                 if (results.direction === 1) {
-                    updateStock(1, "animal_crossing", results.number, playerList.dataset.id)
+                    updateStock(1, "animal_crossing", results.number, "Animal Crossing Up: ")
                 } else {
-                    updateStock(-1, "animal_crossing", results.number, playerList.dataset.id)
+                    updateStock(-1, "animal_crossing", results.number, "Animal Crossing Down: ")
                 }
                 break;
             case 3:
                 if (results.direction === 1) {
-                    updateStock(1, "frozen_pizza", results.number, playerList.dataset.id)
+                    updateStock(1, "frozen_pizza", results.number, "Frozen Pizza Up: ")
                 } else {
-                    updateStock(-1, "frozen_pizza", results.number, playerList.dataset.id)
+                    updateStock(-1, "frozen_pizza", results.number, "Frozen Pizza Down: ")
                 }
                 break;
             case 4:
                 if (results.direction === 1) {
-                    updateStock(1, "hand_soap", results.number, playerList.dataset.id)
+                    updateStock(1, "hand_soap", results.number, "Hand Soap Up: ")
                 } else {
-                    updateStock(-1, "hand_soap", results.number, playerList.dataset.id)
+                    updateStock(-1, "hand_soap", results.number, "Hand Soap Down: ")
                 }
                 break;
         }
     }
 
-    function updateStock(direction, comodity, change, game_id) {
+    function updateStock(direction, comodity, change, text) {
         let stock = document.getElementById(comodity)
         let currentValue = parseInt(stock.dataset.value)
         let newValue = parseInt(currentValue) + (change * 25 * direction)
+        let div = document.createElement("div")
         let config = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -219,14 +301,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
         stock.dataset.value = newValue
         stock.innerText = `${comodity} value: ${newValue}`
 
-        console.log(comodity)
+        console.log(text)
+        div.innerText = `${text}: ${change * 25}`
+        tracker.appendChild(div)
+        console.log(tracker.children)
+
         fetch(`http://localhost:3000/api/games/${parseInt(playerList.dataset.game_id)}`, {
             method: "PATCH",
             headers: config,
             body: JSON.stringify({ "game": { [comodity]: newValue } })
         })
-            .then(resp => resp.json())
-            .then(game => getChart(game))
+        .then(resp => resp.json())
+        .then(game => getChart(game))
 
     }
 

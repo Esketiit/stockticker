@@ -92,6 +92,10 @@ h1 {
     
 }
 
+.tracker {
+    font-family: 'Poppins', sans-serif;
+}
+
 
  /* buttons! */
 
@@ -188,6 +192,8 @@ h1 {
 }
 
 #comodity {
+    display: flex;
+    flex-direction: unset;
 	box-shadow: 3px 2px 0px 2px rgb(248, 67, 248);
 	background-color:#44c767;
 	border-radius:42px;
@@ -201,6 +207,7 @@ h1 {
 	text-decoration:none;
     text-shadow:0px 1px 0px #2f6627;
     outline-width: 0;
+
 }
 #comodity:hover {
 	background-color: rgb(214, 146, 0);
