@@ -15,7 +15,7 @@ game = {
   "hand_soap": 100,
   "frozen_pizza": 75,
   "animal_crossing": 50,
-  "round": 8
+  "round": 10
 }
 
 
@@ -24,8 +24,8 @@ new_game = Game.create(game)
 players = [
   { 
     "game_id": new_game.id,
-    "name": "Joseph(Player1)", 
-    "money": 4300,
+    "name": "Player1", 
+    "money": 10000,
     "round": 8,
     "toilet_paper": 0,
     "hand_soap": 0,
@@ -37,8 +37,8 @@ players = [
 { 
   "game_id": new_game.id,
   "round": 8,
-  "name": "Brian(Player2)", 
-  "money": 5000,
+  "name": "Player2", 
+  "money": 10000,
   "toilet_paper": 0,
   "hand_soap": 0,
   "frozen_pizza": 0,

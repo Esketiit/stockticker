@@ -6,10 +6,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let pizza = document.getElementById("frozen_pizza")
     let round = document.getElementById("round_counter")
     let turnButton = document.getElementById("end_turn")
+    let tracker = document.querySelector(".tracker")
     let playerList = document.getElementById("players")
-
+    //playerID is defined in renderPlayer and used in endGame
+    let players = []
     fetchGame()
-    console.log(playerList.children)
 
     die.addEventListener("click", (event) => {
         if (round.dataset.value > 1) {
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         } else {
             round.dataset.value--
             round.innerText = `Round Left: ${round.dataset.value}`
+            interpretDice()
             endGame()
         }
     })
@@ -33,7 +35,30 @@ document.addEventListener("DOMContentLoaded", (event) => {
     })
 
     function endGame() {
-        console.log("END FUNCTION HERE")
+        //disables roll button
+        die.setAttribute("disabled", "true")
+        let h1 = document.createElement('h1')
+        let animalValue = animal.dataset.value
+        let toiletValue = toilet.dataset.value
+        let soapValue = soap.dataset.value
+        let pizzaValue = pizza.dataset.value
+        let player1 = players[0]
+        let player1Value = 0
+        let player2 = players[1]
+        let player2Value = 0
+
+        player1Value = parseInt((player1.money + (player1.toilet_paper * toiletValue) + (player1.animal_crossing * animalValue) + (player1.hand_soap * soapValue) + (player1.frozen_pizza * pizzaValue)))
+        player2Value = parseInt((player2.money + (player2.toilet_paper * toiletValue) + (player2.animal_crossing * animalValue) + (player2.hand_soap * soapValue) + (player2.frozen_pizza * pizzaValue)))
+        console.log(player1Value)
+        console.log(player2Value)
+
+        if (player1Value > player2Value) {
+            h1.innerText = `Player 1 won with ${player1Value} dollars!`
+            tracker.append(h1)
+        } else if (player1Value > player2Value) {
+            h1.innerText = `Player 2 won with ${player2Value} dollars!`
+            tracker.append(h1)
+        }
     }
 
     function buyStock(commodityDiv, playerDiv) {
@@ -119,6 +144,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         fetch("http://localhost:3000/api/games")
             .then(response => response.json())
             .then(gameArr => renderGame(gameArr))
+
+
     }
 
     function renderGame(gameArr) {
@@ -140,12 +167,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
         toilet.innerText = `Toilet Paper Value: ${game.toilet_paper}`
         animal.innerText = `Animal Crossing Value: ${game.animal_crossing}`
         round.innerText = `Rounds Left: ${game.round}`
+
     }
 
     function createPlayerDiv(player) {
         //div that holds data and buttons for a given player
         let playerDiv = document.createElement('div')
         playerDiv.dataset.id = player.id
+        players.push(player)
         playerDiv.setAttribute("class", "player")
         //h4 that shows player name
         let playerName = document.createElement('h4')
@@ -208,7 +237,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         playerDiv.append(soapBuy)
 
         // playerDiv.append(playerName, turnButton, cash, pizzaStock, toiletStock, animalStock, soapStock)
-        playerList.append(playerDiv)
+        playerList.appendChild(playerDiv)
     }
 
 
@@ -221,39 +250,40 @@ document.addEventListener("DOMContentLoaded", (event) => {
         switch (results.comodity) {
             case 1:
                 if (results.direction === 1) {
-                    updateStock(1, "toilet_paper", results.number, playerList.dataset.id)
+                    updateStock(1, "toilet_paper", results.number, "Toilet Paper Up: ")
                 } else {
-                    updateStock(-1, "toilet_paper", results.number, playerList.dataset.id)
+                    updateStock(-1, "toilet_paper", results.number, "Toilet Paper Down: ")
                 }
                 break;
             case 2:
                 if (results.direction === 1) {
-                    updateStock(1, "animal_crossing", results.number, playerList.dataset.id)
+                    updateStock(1, "animal_crossing", results.number, "Animal Crossing Up: ")
                 } else {
-                    updateStock(-1, "animal_crossing", results.number, playerList.dataset.id)
+                    updateStock(-1, "animal_crossing", results.number, "Animal Crossing Down: ")
                 }
                 break;
             case 3:
                 if (results.direction === 1) {
-                    updateStock(1, "frozen_pizza", results.number, playerList.dataset.id)
+                    updateStock(1, "frozen_pizza", results.number, "Frozen Pizza Up: ")
                 } else {
-                    updateStock(-1, "frozen_pizza", results.number, playerList.dataset.id)
+                    updateStock(-1, "frozen_pizza", results.number, "Frozen Pizza Down: ")
                 }
                 break;
             case 4:
                 if (results.direction === 1) {
-                    updateStock(1, "hand_soap", results.number, playerList.dataset.id)
+                    updateStock(1, "hand_soap", results.number, "Hand Soap Up: ")
                 } else {
-                    updateStock(-1, "hand_soap", results.number, playerList.dataset.id)
+                    updateStock(-1, "hand_soap", results.number, "Hand Soap Down: ")
                 }
                 break;
         }
     }
 
-    function updateStock(direction, comodity, change, game_id) {
+    function updateStock(direction, comodity, change, text) {
         let stock = document.getElementById(comodity)
         let currentValue = parseInt(stock.dataset.value)
         let newValue = parseInt(currentValue) + (change * 25 * direction)
+        let div = document.createElement("div")
         let config = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -269,14 +299,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
         stock.dataset.value = newValue
         stock.innerText = `${comodity} value: ${newValue}`
 
-        console.log(comodity)
+        console.log(text)
+        div.innerText = `${text}: ${change * 25}`
+        tracker.appendChild(div)
+        console.log(tracker.children)
+
         fetch(`http://localhost:3000/api/games/${parseInt(playerList.dataset.game_id)}`, {
             method: "PATCH",
             headers: config,
             body: JSON.stringify({ "game": { [comodity]: newValue } })
         })
-            .then(resp => resp.json())
-            .then(data => console.log(data))
+        // .then(resp => resp.json())
+        // .then(data => console.log(data))
 
     }
 
