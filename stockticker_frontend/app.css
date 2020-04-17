@@ -34,7 +34,9 @@ h1 {
     text-align: center;
 }
 
-#player_list{
+#players{
+    display: grid;
+    grid-template-columns: auto auto;
     margin:0  auto;
 }
 
