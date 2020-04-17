@@ -267,8 +267,12 @@ function getChart(game) {
           labels: ['Toilet Paper', 'Hand Soap', 'Frozen Pizza', 'Animal Crossing'],
           datasets: [{
               label: 'Quarentine Commodities',
-              backgroundColor: 'rgb(255, 99, 132)',
-              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'rgb(0, 200, 200)',
+              borderColor: 'rgb(255, 20, 200)',
+              borderWidth: 5,
+              steppedLine: true,
+              pointStyle: 'triangle',
+              
               data: [`${game.toilet_paper}`, `${game.hand_soap}`, `${game.frozen_pizza}`, `${game.animal_crossing}`]
           }]
       },

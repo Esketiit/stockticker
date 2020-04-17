@@ -1,8 +1,12 @@
 h1 {
-    font-family: 'Oswald', sans-serif;
-    color: limegreen;
-    margin: auto;
-    width: 200px;
+    display: flex;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+    text-shadow: 2px 2px white;
+    /* margin: auto; */
+    justify-content: center;
+    font-size: 100px;
+    /* width: 200px; */
 }
 
 /* body {
@@ -50,31 +54,101 @@ h1 {
 }
 
 #players{
-    color: red;
-    font-family: 'Oswald', sans-serif;
+    color:black;
+    font-family: 'Poppins', sans-serif;
 }
 
-#buy_animal {
-    outline-width: 0ch;
 
-	box-shadow:inset 0px 34px 0px -15px #b54b3a;
-	background-color:#a73f2d;
-	border:1px solid #241d13;
+ /* buttons! */
+
+#buy_animal {
+	box-shadow: 3px 2px 0px 2px rgb(248, 67, 248);
+	background-color:#44c767;
+	border-radius:42px;
+	border:1px solid #18ab29;
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
-	font-family: fantasy
-	font-size:15px;
-	font-weight:bold;
-	padding:9px 23px;
+	font-family:Arial;
+	font-size:11px;
+	padding:16px 31px;
 	text-decoration:none;
-    text-shadow:0px -1px 0px #7a2a1d;
-    border
+	text-shadow:0px 1px 0px #2f6627;
 }
 #buy_animal:hover {
-	background-color:#b34332;
+	background-color:#5cbf2a;
 }
 #buy_animal:active {
 	position:relative;
 	top:1px;
+}
+
+#buy_pizza {
+	box-shadow: 3px 2px 0px 2px rgb(248, 67, 248);
+	background-color:#44c767;
+	border-radius:42px;
+	border:1px solid #18ab29;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:11px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+}
+#buy_pizza:hover {
+	background-color:#5cbf2a;
+}
+#buy_pizza:active {
+	position:relative;
+	top:1px;
+}
+
+#buy_soap {
+	box-shadow: 3px 2px 0px 2px rgb(248, 67, 248);
+	background-color:#44c767;
+	border-radius:42px;
+	border:1px solid #18ab29;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:11px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+}
+#buy_soap:hover {
+	background-color:#5cbf2a;
+}
+#buy_soap:active {
+	position:relative;
+	top:1px;
+}
+
+#buy_toilet {
+	box-shadow: 3px 2px 0px 2px rgb(248, 67, 248);
+	background-color:#44c767;
+	border-radius:42px;
+	border:1px solid #18ab29;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:11px;
+	padding:16px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+}
+#buy_toilet:hover {
+	background-color:#5cbf2a;
+}
+#buy_toilet:active {
+	position:relative;
+	top:1px;
+}
+
+html {
+    background-color: rgb(255, 200, 161);
 }
