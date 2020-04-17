@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         let currentValue = null
         let playerCash = playerDiv.childNodes[1]
         let currentCash = playerCash.dataset.amount
-
+        //lol
         switch (commodityDiv.id) {
             case "buy_pizza":
                 let playerPizza = playerDiv.childNodes[2]
