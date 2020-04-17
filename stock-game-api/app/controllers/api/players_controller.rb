@@ -16,7 +16,7 @@ class Api::PlayersController < ApplicationController
 
     player.update(player_params)
 
-    render json: player_params
+    render json: player
   end
 
   private
